@@ -10,6 +10,11 @@ import type { NextConfig } from "next";
  * 静态导出时 `next/image` 必须关闭优化（unoptimized），因为出口没有 Node 进程。
  */
 const isStaticExport = process.env.STATIC_EXPORT === "1";
+/**
+ * 部署子路径前缀（GitHub Pages 项目站点位于 /<仓库名>/）。
+ * 漏了它，Next 生成的 CSS/JS 地址就会 404，整页没有样式——这是必须项。
+ */
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -17,6 +22,7 @@ const nextConfig: NextConfig = {
     ? {
         output: "export" as const,
         trailingSlash: true,
+        basePath: basePath || undefined,
         images: { unoptimized: true },
       }
     : {}),
