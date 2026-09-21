@@ -26,18 +26,29 @@ npm run dev      # → http://localhost:3100
 npm run lint && npm run typecheck && npm run build
 ```
 
-## 对外预览包（Hugging Face Space）
+## 在线预览（云地审核通道）
 
-本地 `localhost:3100` 只有本机能看，云端 AI 打不开。要让别人（或云端 GPT）看到效果，
-可以打包成一个**静态预览包**上传到 Hugging Face 的 Static Space：
+**固定预览网址：** https://eastpackai.github.io/PACKGO-Web-2/
 
-```bash
-npm run build:static   # 静态导出 → out/
-npm run hf:pack        # 打包 → hf-space/（含 Space 用的 README.md）
-```
+这个网址给 Owner 和云端 ChatGPT 用来审核当前版本，**不需要本机开着服务**。
 
-然后把 `hf-space/` 里的**全部内容**上传到 Space 仓库根目录即可（详见该目录里的 README）。
-`hf-space/` 是构建产物，不进仓库；源码改了重新跑上面两条命令即可。
+链路（已跑通）：本地改代码 → `npm run lint && npm run typecheck && npm run build`
+→ `git commit` → `git push origin develop` → GitHub Actions 自动构建（含静态导出）
+→ 自动发布到 GitHub Pages → 网址自动更新。
+
+| 项 | 值 |
+|---|---|
+| 代码仓库 | https://github.com/eastpackAI/PACKGO-Web-2 （**公开**；免费套餐下私有仓库不能用 Pages） |
+| 分支 | `main` = 正式基线；`develop` = 预览（自动发布监听此分支） |
+| 本地手动生成预览包 | `STATIC_EXPORT=1 NEXT_PUBLIC_BASE_PATH=/PACKGO-Web-2 npm run build:static` |
+
+> 说明：Pages 项目站点部署在子路径 `/<仓库名>/` 下，所以静态导出必须带 `NEXT_PUBLIC_BASE_PATH`；
+> CI 里已自动传入。CI 还带一道防呆门禁：导出后校验资源地址带前缀，不带就让发布失败，**不要删**。
+
+**备用方案**：打包成 Hugging Face Static Space（`npm run build:static` + `npm run hf:pack` → `hf-space/`）。
+当前首选 GitHub Pages，这条只在需要时用。
+
+发布与排障的完整步骤见技能 `packgo-web-publish`（`~/.codex/skills/packgo-web-publish/SKILL.md`）。
 
 ## 内容在哪
 

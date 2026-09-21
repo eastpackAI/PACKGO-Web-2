@@ -91,6 +91,29 @@ npm run hf:pack       # 把 out/ 打包 → hf-space/（可直接上传的 Space
 | lint / typecheck / build | ✅ 全部通过 |
 | 本地预览 | ✅ `127.0.0.1:3100` 返回 200；并提供**一键启动** `启动预览.command` |
 | 静态导出 / 外部预览包 | ✅ `npm run build:static` + `npm run hf:pack` 已跑通：纯静态（无 Next 运行时）自检 HTTP 200、图片与 CSS/JS 全部 200；产物为 `hf-space/`（30 个文件，2.8MB，已剔除内部说明文件） |
-| 公网预览 | ⛔ **未发布**：托管到 Hugging Face Space 需 Owner 在网页端创建 Space 并上传 `hf-space/`（或提供写入凭证由本机推送）。本地服务仍只监听回环，未对外暴露 |
+| 公网预览 | ✅ **已发布**：https://eastpackai.github.io/PACKGO-Web-2/ （见下方「对外预览与发布通道」）。本地服务仍只监听回环，未对外暴露 |
 | 真实素材 | ⛔ 仍缺（现有为 AI 占位；真实产品照、工厂影像待拍） |
 | 后续页面 | ⛔ 未建（行业厅详情、品类详情、Packy 真实接入等在后续阶段） |
+
+## 八、对外预览与发布通道（2026-09-21 起生效，Owner 已授权）
+
+> **Owner 只授权"把网站工程本身发布到公网预览"**；工作区其他内容（数据库、服务、内部文档、
+> 客户与供应商资料）**不得对外公开**。
+
+| 项 | 值 |
+|---|---|
+| 公网预览网址 | https://eastpackai.github.io/PACKGO-Web-2/ |
+| 代码仓库 | https://github.com/eastpackAI/PACKGO-Web-2 （**公开**；GitHub 免费套餐下私有仓库不能用 Pages） |
+| 分支 | `main` = 正式基线；`develop` = 预览（Pages 只跟 `develop`，推上去即自动发布） |
+| 自动发布配置 | `.github/workflows/deploy-pages.yml`（含 lint / typecheck / 静态导出 / **资源前缀校验**） |
+| 本机手动导出预览包 | `STATIC_EXPORT=1 NEXT_PUBLIC_BASE_PATH=/PACKGO-Web-2 npm run build:static` |
+| 发布与排障技能 | `packgo-web-publish`（`~/.codex/skills/packgo-web-publish/SKILL.md`） |
+| Hugging Face Space 打包 | 保留为**备用方案**（`npm run hf:pack` → `hf-space/`）；当前**首选 GitHub Pages** |
+
+三条硬约束（漏一条线上就坏）：项目站点必须有 `basePath = /<仓库名>`；`next/image` 关优化时
+**不会**自动补前缀；必须产出 `out/.nojekyll`。CI 里的"资源地址必须带子路径前缀"门禁**不得删除**。
+
+**另**：本工程的首页已于 2026-09-21 合并进网站 1 的 Standard View（标准视图），
+样式全部限定在 `.standard-home` 容器内，不影响网站 1 的空间视图。本目录仍保持独立工程。
+
+**边界**：不得绑定或修改 `eastpacksolutions.com` 及其 DNS；不得把整个工作区仓库推上 GitHub。
