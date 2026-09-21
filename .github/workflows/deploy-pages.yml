@@ -50,6 +50,17 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
         run: pnpm build:static
 
+      # 防呆门禁：漏 basePath 会让线上 CSS/JS 404、整页没有样式（本站曾因此裸奔上线一次）。
+      - name: 防呆校验：资源地址必须带仓库子路径前缀
+        run: |
+          REPO="${{ github.event.repository.name }}"
+          if ! grep -q "/$REPO/_next/" out/index.html; then
+            echo "❌ 导出页面的 CSS/JS 地址缺少子路径前缀 /$REPO/"
+            echo "   线上会 404、整页无样式。请检查 next.config.ts 静态导出时是否设置了 basePath。"
+            exit 1
+          fi
+          echo "✅ 资源地址已带子路径前缀 /$REPO/"
+
       - name: 关闭 Jekyll 并剔除内部说明文件
         run: |
           touch out/.nojekyll
