@@ -1,0 +1,29 @@
+{
+  "name": "packgo-web-2",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PACKGO 网站 2 —— 全新独立工程（Cubit Packaging 风格方向）。与 PACKGO-Web（网站 1）完全独立。",
+  "packageManager": "pnpm@11.19.0",
+  "scripts": {
+    "dev": "next dev -p 3100",
+    "build": "next build",
+    "build:static": "STATIC_EXPORT=1 next build",
+    "hf:pack": "node scripts/pack-hf-space.mjs",
+    "start": "next start -p ${PORT:-3100}",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "16.3.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.5",
+    "typescript": "6.0.3"
+  }
+}

@@ -1,0 +1,75 @@
+name: 预览发布（GitHub Pages）
+
+# 触发：向 develop 推送（或手动触发）
+# 这条链就是"本地改代码 → push develop → 自动构建 → 自动发布"。
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 取出代码
+        uses: actions/checkout@v4
+
+      # 本工程依赖由 pnpm 管理（本机终端没装 pnpm 也没关系，CI 会自动装）
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+
+      - name: 安装 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 代码检查 lint
+        run: pnpm lint
+
+      - name: 类型检查 typecheck
+        run: pnpm typecheck
+
+      - name: 静态导出（带 Pages 子路径）
+        env:
+          STATIC_EXPORT: "1"
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+        run: pnpm build:static
+
+      - name: 关闭 Jekyll 并剔除内部说明文件
+        run: |
+          touch out/.nojekyll
+          find out -name '000_*.md' -delete
+
+      - name: 配置 Pages
+        uses: actions/configure-pages@v5
+
+      - name: 上传站点产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 发布到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

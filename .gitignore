@@ -1,0 +1,9 @@
+/node_modules
+/.next
+/out
+/hf-space
+/build
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+.env*
