@@ -1537,20 +1537,40 @@ body.packy-open {
   border-top: 1px dashed var(--line);
 }
 
+/* 规格旁的「问 Packy」：要看得懂、要好点（不是一个小小的"问"字） */
 .wb-ask {
-  margin-left: 6px;
-  border: 1px solid var(--line);
-  background: transparent;
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 34px;
+  padding: 6px 15px;
+  border: 1px solid var(--accent);
   border-radius: 999px;
-  padding: 1px 8px;
+  background: var(--accent-soft);
   font: inherit;
-  font-size: 12px;
-  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--accent-deep);
+  white-space: nowrap;
   cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
 }
 
 .wb-ask:hover {
-  background: var(--accent-soft);
+  background: #e9d7bf;
+}
+
+.wb-ask:active {
+  transform: translateY(1px);
+}
+
+.wb-form label > span {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
 }
 
 .wb-field {

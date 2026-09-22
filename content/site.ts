@@ -110,6 +110,7 @@ export const workbench = {
       note: "还想到什么就写在这里，例如：承重、阻隔要求、参考图、上机方式…",
     },
     askPacky: "不知道怎么选？直接问 Packy →",
+    askPackyShort: "问 Packy",
     submit: "建立我的工作台",
     reset: "清空我的工作台数据",
     missing: "请填写称呼与邮箱。",

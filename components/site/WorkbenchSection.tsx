@@ -342,8 +342,13 @@ export function WorkbenchSection() {
               <label>
                 <span>
                   {workbench.form.labels.layers}
-                  <button type="button" className="wb-ask" onClick={() => specQuestion("材质层数")}>
-                    问
+                  <button
+                    type="button"
+                    className="wb-ask"
+                    aria-label="问 Packy：材质层数怎么选"
+                    onClick={() => specQuestion("材质层数")}
+                  >
+                    {workbench.form.askPackyShort}
                   </button>
                 </span>
                 <select value={form.layers} onChange={(e) => setForm({ ...form, layers: e.target.value })}>
@@ -357,8 +362,13 @@ export function WorkbenchSection() {
               <label>
                 <span>
                   {workbench.form.labels.printing}
-                  <button type="button" className="wb-ask" onClick={() => specQuestion("印刷色数")}>
-                    问
+                  <button
+                    type="button"
+                    className="wb-ask"
+                    aria-label="问 Packy：印刷色数怎么选"
+                    onClick={() => specQuestion("印刷色数")}
+                  >
+                    {workbench.form.askPackyShort}
                   </button>
                 </span>
                 <select value={form.printing} onChange={(e) => setForm({ ...form, printing: e.target.value })}>
@@ -372,8 +382,13 @@ export function WorkbenchSection() {
               <label>
                 <span>
                   {workbench.form.labels.lamination}
-                  <button type="button" className="wb-ask" onClick={() => specQuestion("亮膜还是哑膜")}>
-                    问
+                  <button
+                    type="button"
+                    className="wb-ask"
+                    aria-label="问 Packy：亮膜还是哑膜"
+                    onClick={() => specQuestion("亮膜还是哑膜")}
+                  >
+                    {workbench.form.askPackyShort}
                   </button>
                 </span>
                 <select
@@ -391,8 +406,13 @@ export function WorkbenchSection() {
             <div className="wb-field">
               <span className="wb-field__label">
                 {workbench.form.labels.finishes}
-                <button type="button" className="wb-ask" onClick={() => specQuestion("其他工艺（烫金、击凸、触感膜…）")}>
-                  问
+                <button
+                  type="button"
+                  className="wb-ask"
+                  aria-label="问 Packy：其他工艺怎么选"
+                  onClick={() => specQuestion("其他工艺（烫金、击凸、触感膜…）")}
+                >
+                  {workbench.form.askPackyShort}
                 </button>
               </span>
               <div className="wb-chips">
