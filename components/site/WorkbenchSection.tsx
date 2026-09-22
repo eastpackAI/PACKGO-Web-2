@@ -18,6 +18,7 @@ type Project = {
   dueAt: string;
   layers: string;
   printing: string;
+  spot: string;
   finishes: string[];
   lamination: string;
   note: string;
@@ -52,7 +53,8 @@ const emptyForm = {
   useCase: "",
   dueAt: "",
   layers: workbench.specs.layers[4] as string,
-  printing: workbench.specs.printing[6] as string,
+  printing: workbench.specs.printing[3] as string,
+  spot: workbench.specs.spot[4] as string,
   finishes: [] as string[],
   lamination: workbench.specs.lamination[2] as string,
   note: "",
@@ -148,7 +150,8 @@ export function WorkbenchSection() {
       `品类：${form.kind}`,
       form.useCase ? `用途：${form.useCase}` : "",
       `材质层数：${form.layers}`,
-      `印刷：${form.printing}`,
+      `印刷（主色）：${form.printing}`,
+      `专色：${form.spot}`,
       `其他工艺：${form.finishes.length ? form.finishes.join("、") : "暂时不做"}`,
       `表面处理：${form.lamination}`,
       tiers.length ? `数量档：${tiers.map((t) => money(t)).join(" / ")} 个` : "",
@@ -365,14 +368,34 @@ export function WorkbenchSection() {
                   <button
                     type="button"
                     className="wb-ask"
-                    aria-label="问 Packy：印刷色数怎么选"
-                    onClick={() => specQuestion("印刷色数")}
+                    aria-label="问 Packy：主色怎么选"
+                    onClick={() => specQuestion("印刷主色（四色还是专色）")}
                   >
                     {workbench.form.askPackyShort}
                   </button>
                 </span>
                 <select value={form.printing} onChange={(e) => setForm({ ...form, printing: e.target.value })}>
                   {workbench.specs.printing.map((v) => (
+                    <option key={v} value={v}>
+                      {v}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span>
+                  {workbench.form.labels.spot}
+                  <button
+                    type="button"
+                    className="wb-ask"
+                    aria-label="问 Packy：要不要加专色"
+                    onClick={() => specQuestion("要不要加专色")}
+                  >
+                    {workbench.form.askPackyShort}
+                  </button>
+                </span>
+                <select value={form.spot} onChange={(e) => setForm({ ...form, spot: e.target.value })}>
+                  {workbench.specs.spot.map((v) => (
                     <option key={v} value={v}>
                       {v}
                     </option>
@@ -439,12 +462,20 @@ export function WorkbenchSection() {
                 })}
               </div>
             </div>
+            <p className="wb-note">{workbench.specs.printingHint}</p>
             <p className="wb-askline">{workbench.form.askPacky}</p>
 
             {/* 数量与报价 */}
             <div className="wb-field">
               <span className="wb-field__label">{workbench.qty.title}</span>
-              <p className="wb-moq">⚠ {workbench.qty.moqNote}</p>
+              <div className="wb-fee">
+                <b className="wb-fee__t">⚠ {workbench.qty.feeTitle}</b>
+                <ul className="wb-fee__list">
+                  {workbench.qty.feeNote.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              </div>
               <div className="wb-chips">
                 {workbench.qty.tiers.map((t) => {
                   const on = tiers.includes(t.v);
@@ -452,18 +483,19 @@ export function WorkbenchSection() {
                     <button
                       type="button"
                       key={t.v}
-                      className={`wb-chip wb-chip--qty${on ? " is-on" : ""}`}
+                      className={`wb-chip wb-chip--qty${on ? " is-on" : ""}${
+                        "low" in t && t.low ? " wb-chip--low" : ""
+                      }`}
                       aria-pressed={on}
+                      title={"low" in t && t.low ? workbench.qty.lowNote : undefined}
                       onClick={() => toggleTier(t.v)}
                     >
                       {t.label} 个
                     </button>
                   );
                 })}
-                <span className="wb-chip wb-chip--off" title={workbench.qty.below.note}>
-                  {workbench.qty.below.label} 个（{workbench.qty.below.note}）
-                </span>
               </div>
+              <p className="wb-note">{workbench.qty.lowNote}</p>
               <p className="wb-note">{workbench.qty.pickHint}</p>
             </div>
 
@@ -534,7 +566,8 @@ export function WorkbenchSection() {
                     {p.dueAt ? ` · 期望交期 ${p.dueAt}` : ""}
                   </h4>
                   <p className="wb-project__meta">
-                    {p.layers}｜{p.printing}｜{p.lamination}｜
+                    {p.layers}｜{p.printing}
+                    {p.spot && p.spot !== "不加专色" ? ` + ${p.spot}` : ""}｜{p.lamination}｜
                     {p.finishes.length ? p.finishes.join("、") : "无其他工艺"}
                     {p.quotes.length ? `｜${p.quotes.map((q) => money(q.qty)).join(" / ")} 个` : ""}
                   </p>
@@ -578,8 +611,12 @@ export function WorkbenchSection() {
                             <dd>{p.layers}</dd>
                           </div>
                           <div>
-                            <dt>印刷</dt>
+                            <dt>印刷（主色）</dt>
                             <dd>{p.printing}</dd>
+                          </div>
+                          <div>
+                            <dt>专色</dt>
+                            <dd>{p.spot || "未填"}</dd>
                           </div>
                           <div>
                             <dt>其他工艺</dt>

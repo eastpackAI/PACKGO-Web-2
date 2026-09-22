@@ -1625,14 +1625,39 @@ body.packy-open {
   background: var(--bg-alt);
 }
 
-.wb-moq {
-  margin: 0 0 10px;
-  padding: 8px 12px;
+/* 基础加工费：一条一条写清楚，别只丢一个"起订量" */
+.wb-fee {
+  margin: 0 0 12px;
+  padding: 12px 16px;
   border-radius: 10px;
   background: #fdf5e8;
   border: 1px solid #f0dcc0;
-  color: #8a5a1b;
+  color: #7a4d12;
+}
+
+.wb-fee__t {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.wb-fee__list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 3px;
   font-size: 14.5px;
+  line-height: 1.75;
+}
+
+.wb-chip--low {
+  border-style: dashed;
+  color: #8a5a1b;
+}
+
+.wb-chip--low.is-on {
+  background: #fdf5e8;
+  border-color: #d8b483;
 }
 
 .wb-askline {
