@@ -982,8 +982,26 @@ a {
 .packy-drawer__backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(21, 22, 26, 0.28);
+  background: rgba(21, 22, 26, 0.06);
   z-index: 90;
+  /* 只压暗、不吃点击：客户要能一边开着 Packy 一边继续浏览和滚动整个页面。
+     关闭交给「点空白处收回」的 document 监听（置顶时不关）。 */
+  pointer-events: none;
+}
+
+/* 对话栏打开时，正文整体让出右手边一条，内容不被压住（客户可以一直逛） */
+body {
+  transition: padding-right 0.22s var(--ease);
+}
+
+body.packy-open {
+  padding-right: min(460px, 94vw);
+}
+
+@media (max-width: 900px) {
+  body.packy-open {
+    padding-right: 0;
+  }
 }
 
 .packy-drawer {
@@ -1510,4 +1528,309 @@ a {
   .wb-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+/* ── 工作台：规格字段 / 数量档 / 报价 / 项目展开 ───────────────────────── */
+.wb-grid--specs {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+
+.wb-ask {
+  margin-left: 6px;
+  border: 1px solid var(--line);
+  background: transparent;
+  border-radius: 999px;
+  padding: 1px 8px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.wb-ask:hover {
+  background: var(--accent-soft);
+}
+
+.wb-field {
+  margin-top: 14px;
+}
+
+.wb-field__label {
+  display: block;
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.wb-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wb-chip {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font: inherit;
+  font-size: 14.5px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.wb-chip:hover {
+  border-color: var(--accent);
+}
+
+.wb-chip.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  font-weight: 600;
+}
+
+.wb-chip--qty {
+  min-width: 128px;
+  text-align: center;
+}
+
+.wb-chip--off {
+  border-style: dashed;
+  color: var(--muted);
+  cursor: not-allowed;
+  background: var(--bg-alt);
+}
+
+.wb-moq {
+  margin: 0 0 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #fdf5e8;
+  border: 1px solid #f0dcc0;
+  color: #8a5a1b;
+  font-size: 14.5px;
+}
+
+.wb-askline {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 14.5px;
+}
+
+.wb-notearea {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--ink);
+  resize: vertical;
+}
+
+.wb-notearea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgb(176 118 58 / 16%);
+}
+
+.wb-send {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.wb-send:hover {
+  background: var(--accent-soft);
+}
+
+.wb-project__toggle {
+  margin-left: auto;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: var(--radius-sm);
+  padding: 5px 12px;
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.wb-project__toggle:hover {
+  background: var(--accent-soft);
+}
+
+.wb-project__stage--soft {
+  background: var(--bg-alt);
+  color: var(--muted);
+}
+
+.wb-project__meta {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.wb-project__body {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+
+.wb-sub {
+  margin-bottom: 16px;
+}
+
+.wb-sub__h {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+
+.wb-stages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.wb-stages li {
+  display: grid;
+  gap: 2px;
+  padding-left: 12px;
+  border-left: 3px solid var(--line);
+}
+
+.wb-stages li.is-current {
+  border-left-color: var(--accent);
+}
+
+.wb-stages li.is-next {
+  border-left-color: var(--accent-soft);
+}
+
+.wb-stages__name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.wb-stages li.is-todo .wb-stages__name {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.wb-stages__desc {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.wb-blocker {
+  margin: 0 0 4px;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.wb-specs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 18px;
+  margin: 0;
+}
+
+.wb-specs > div {
+  display: flex;
+  gap: 10px;
+  font-size: 15px;
+}
+
+.wb-specs dt {
+  color: var(--muted);
+  min-width: 74px;
+}
+
+.wb-specs dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.wb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.wb-table th {
+  text-align: left;
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--muted);
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.wb-table td {
+  padding: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.wb-quote-state {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 13px;
+  background: #fdf5e8;
+  color: #8a5a1b;
+}
+
+/* ── Packy 对话栏：置顶（跟随客户浏览） ───────────────────────────────── */
+.packy-drawer__pin {
+  margin-left: auto;
+  border: 1px solid var(--line);
+  background: transparent;
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.packy-drawer__pin.is-on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  font-weight: 600;
+}
+
+.packy-drawer__close {
+  margin-left: 8px;
+}
+
+.packy-drawer__pinned {
+  margin: 0;
+  padding: 10px 20px;
+  background: var(--accent-soft);
+  border-bottom: 1px solid var(--line);
+  color: #6b4a1d;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+
+.bubble--note {
+  align-self: center;
+  max-width: 100%;
+  margin-top: 2px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--bg-alt);
+  border: 1px dashed var(--line-strong);
+  color: var(--muted);
+  font-size: 12.5px;
 }
