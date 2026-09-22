@@ -65,10 +65,14 @@ export function WorkbenchSection() {
   const [tiers, setTiers] = useState<number[]>([]);
   const [open, setOpen] = useState(true);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [showAllQuotes, setShowAllQuotes] = useState(false);
   const [msg, setMsg] = useState("");
   const [noteDraft, setNoteDraft] = useState<Record<string, string>>({});
   const [loaded, setLoaded] = useState(false);
   const fileRef = useRef<HTMLInputElement | null>(null);
+  // 连续快速点击（同一帧内多次写入）时，闭包里的 projects 会是旧值，导致丢数据。
+  // 这里用 ref 保存"最新一次真正写下去的值"，所有追加类操作都基于它计算。
+  const projectsRef = useRef<Project[]>([]);
 
   /* eslint-disable react-hooks/set-state-in-effect -- 仅在挂载后执行一次的本地恢复，
      与服务端预渲染保持一致（做法与 PackyDrawer 相同） */
@@ -77,6 +81,7 @@ export function WorkbenchSection() {
       const raw = window.localStorage.getItem(STORE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as { projects?: Project[]; artworks?: Artwork[] };
+        projectsRef.current = parsed.projects ?? [];
         setProjects(parsed.projects ?? []);
         setArtworks(parsed.artworks ?? []);
         if ((parsed.projects ?? []).length) setOpen(false);
@@ -89,6 +94,7 @@ export function WorkbenchSection() {
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const persist = useCallback((nextProjects: Project[], nextArtworks: Artwork[]) => {
+    projectsRef.current = nextProjects;
     setProjects(nextProjects);
     setArtworks(nextArtworks);
     try {
@@ -105,11 +111,13 @@ export function WorkbenchSection() {
 
   const allQuotes = useMemo(
     () =>
-      projects.flatMap((p) =>
-        p.quotes.map((q) => ({ ...q, projectId: p.id, projectName: p.kind })),
-      ),
+      projects
+        .flatMap((p) => p.quotes.map((q) => ({ ...q, projectId: p.id, projectName: p.kind })))
+        .sort((a, b) => String(b.at).localeCompare(String(a.at))),
     [projects],
   );
+  /** 询价记录默认只列最近 3 条，多了再展开。 */
+  const visibleQuotes = showAllQuotes ? allQuotes : allQuotes.slice(0, 3);
 
   const stats = useMemo(() => {
     const last = [...projects.map((p) => p.createdAt), ...artworks.map((a) => a.at)].sort().pop();
@@ -165,7 +173,7 @@ export function WorkbenchSection() {
       createdAt: now(),
       notes: [],
     };
-    const ok = persist([project, ...projects], artworks);
+    const ok = persist([project, ...projectsRef.current], artworks);
     setMsg(ok ? workbench.form.saved : "");
     setForm({ ...emptyForm });
     setTiers([]);
@@ -175,15 +183,15 @@ export function WorkbenchSection() {
   function addNote(id: string) {
     const text = (noteDraft[id] ?? "").trim();
     if (!text) return;
-    const next = projects.map((p) =>
+    const next = projectsRef.current.map((p) =>
       p.id === id ? { ...p, notes: [...p.notes, { at: now(), text }] } : p,
     );
-    persist(next, artworks);
+   persist(next, artworks);
     setNoteDraft((d) => ({ ...d, [id]: "" }));
   }
 
   function addTierTo(id: string, qty: number) {
-    const next = projects.map((p) =>
+    const next = projectsRef.current.map((p) =>
       p.id === id && !p.quotes.some((q) => q.qty === qty)
         ? { ...p, quotes: [...p.quotes, { qty, at: now() }].sort((a, b) => a.qty - b.qty) }
         : p,
@@ -209,14 +217,14 @@ export function WorkbenchSection() {
           const url = String(reader.result ?? "");
           setArtworks((prev) => {
             const next = prev.map((a) => (a.id === item.id ? { ...a, dataUrl: url } : a));
-            persist(projects, next);
+            persist(projectsRef.current, next);
             return next;
           });
         };
         reader.readAsDataURL(f);
       }
     });
-    if (accepted.length) persist(projects, [...accepted, ...artworks]);
+    if (accepted.length) persist(projectsRef.current, [...accepted, ...artworks]);
     setMsg(
       blocked || (accepted.length ? `已加入 ${accepted.length} 个文件（存在你自己的浏览器里）。` : ""),
     );
@@ -231,6 +239,7 @@ export function WorkbenchSection() {
       /* 忽略 */
     }
     setProjects([]);
+    projectsRef.current = [];
     setArtworks([]);
     setMsg("");
     setOpen(true);
@@ -628,32 +637,52 @@ export function WorkbenchSection() {
         )}
       </div>
 
-      {/* ④ 我的报价记录（每条数量档一行） */}
+      {/* ④ 询价记录：默认只列最近 3 条，多了展开 */}
       <div className="wb-block">
-        <h3 className="wb-h">{workbench.qty.recordTitle}</h3>
+        <h3 className="wb-h">
+          {workbench.qty.recordTitle}
+          {allQuotes.length ? <span className="wb-h__count">共 {allQuotes.length} 条</span> : null}
+        </h3>
         {allQuotes.length ? (
-          <table className="wb-table">
-            <thead>
-              <tr>
-                <th>数量</th>
-                <th>项目</th>
-                <th>状态</th>
-                <th>登记时间</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allQuotes.map((q) => (
-                <tr key={`${q.projectId}-${q.qty}`}>
-                  <td>{money(q.qty)} 个</td>
-                  <td>{q.projectName}</td>
-                  <td>
-                    <span className="wb-quote-state">{workbench.qty.recordStatus}</span>
-                  </td>
-                  <td>{day(q.at)}</td>
+          <>
+            <table className="wb-table">
+              <thead>
+                <tr>
+                  <th>{workbench.qty.recordCols.at}</th>
+                  <th>{workbench.qty.recordCols.qty}</th>
+                  <th>{workbench.qty.recordCols.project}</th>
+                  <th>{workbench.qty.recordCols.state}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {visibleQuotes.map((q) => (
+                  <tr key={`${q.projectId}-${q.qty}`}>
+                    <td>{day(q.at)}</td>
+                    <td>{money(q.qty)} 个</td>
+                    <td>{q.projectName}</td>
+                    <td>
+                      <span className="wb-quote-state">{workbench.qty.recordStatus}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className="wb-actions">
+              {allQuotes.length > 3 ? (
+                <button
+                  type="button"
+                  className="wb-link"
+                  onClick={() => setShowAllQuotes((v) => !v)}
+                  title={workbench.qty.recordLatest}
+                >
+                  {showAllQuotes
+                    ? workbench.qty.recordLess
+                    : `${workbench.qty.recordMore}（${allQuotes.length}）`}
+                </button>
+              ) : null}
+              <span className="wb-note">{workbench.qty.recordLatest}</span>
+            </div>
+          </>
         ) : (
           <p className="wb-empty">{workbench.qty.recordEmpty}</p>
         )}

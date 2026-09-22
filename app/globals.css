@@ -1767,6 +1767,13 @@ body.packy-open {
   font-size: 15px;
 }
 
+.wb-h__count {
+  margin-left: 10px;
+  color: var(--muted);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
 .wb-table th {
   text-align: left;
   font-weight: 600;
