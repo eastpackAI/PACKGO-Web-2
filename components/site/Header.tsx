@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { PackyOpenButton } from "./PackyDrawer";
 import { brand, nav } from "@/content/site";
 
 export function Header() {
@@ -26,9 +27,7 @@ export function Header() {
           <a className="btn btn--ghost" href="#about">
             {brand.stageNote}
           </a>
-          <a className="btn btn--primary" href="#packy">
-            {brand.primaryCta}
-          </a>
+          <PackyOpenButton label={brand.primaryCta} />
         </div>
 
         <button
@@ -51,9 +50,7 @@ export function Header() {
                 {item.label}
               </a>
             ))}
-            <a className="btn btn--primary" href="#packy" onClick={() => setOpen(false)}>
-              {brand.primaryCta}
-            </a>
+            <PackyOpenButton label={brand.primaryCta} className="btn btn--primary" />
           </nav>
         </div>
       )}

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { brand } from "@/content/site";
+import { PackyOpenButton } from "./PackyDrawer";
 
 export function Hero() {
   return (
@@ -11,9 +12,7 @@ export function Hero() {
           <p className="hero__support">{brand.support}</p>
 
           <div className="hero__actions">
-            <a className="btn btn--primary btn--lg" href="#packy">
-              {brand.primaryCta}
-            </a>
+            <PackyOpenButton className="btn btn--primary btn--lg" label={brand.primaryCta} />
             <a className="btn btn--outline btn--lg" href="#solutions">
               {brand.secondaryCta}
             </a>

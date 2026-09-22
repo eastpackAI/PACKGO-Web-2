@@ -1,5 +1,6 @@
 import { packy } from "@/content/site";
 import { Section } from "./Section";
+import { PackyOpenButton } from "./PackyDrawer";
 
 export function PackySection() {
   return (
@@ -34,12 +35,7 @@ export function PackySection() {
           <div className="bubble bubble--packy">{packy.sample.packy}</div>
 
           <div className="packy-demo__foot">
-            <div className="packy-demo__input" aria-hidden>
-              说说您要做的包装…
-            </div>
-            <span className="packy-demo__send" aria-hidden>
-              发送
-            </span>
+            <PackyOpenButton className="btn btn--primary" label="打开完整对话" />
           </div>
         </aside>
       </div>
