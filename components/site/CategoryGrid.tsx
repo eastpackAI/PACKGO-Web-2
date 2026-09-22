@@ -7,7 +7,7 @@ export function CategoryGrid() {
       id="categories"
       eyebrow="产品品类"
       title="按品类直接找"
-      summary="已经能做的品类在这里；能力范围逐步开放，未开放的不写成已具备。"
+      summary="这些品类都能直接做；如果没找到想要的，把需求说清楚也可以。"
       tone="muted"
     >
       <ul className="category-grid">

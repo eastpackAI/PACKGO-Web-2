@@ -6,8 +6,8 @@ export function IndustrySolutions() {
     <Section
       id="solutions"
       eyebrow="行业解决方案展厅"
-      title="按你的行业进厅，不按我们的产线找路"
-      summary="每个展厅都是一整套解决方案空间：主包装、外包装、标签与配套可以在同一个项目里组合，而不是让你在几个「生产线展厅」之间来回跳。"
+      title="按你的行业进厅，不用先弄懂我们的分类"
+      summary="每个展厅都是一整套方案空间：主包装、外包装、标签与配套可以在同一个项目里组合，一次把一整套定下来，少跑几趟、少解释几遍。"
     >
       <div className="grid grid--4">
         {industries.map((ind) => (
