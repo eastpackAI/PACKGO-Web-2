@@ -7,6 +7,7 @@ import { Hero } from "@/components/site/Hero";
 import { IndustrySolutions } from "@/components/site/IndustrySolutions";
 import { ManufacturingSection } from "@/components/site/ManufacturingSection";
 import { PackySection } from "@/components/site/PackySection";
+import { WorkbenchSection } from "@/components/site/WorkbenchSection";
 import { PackyDrawer } from "@/components/site/PackyDrawer";
 import { PlatformSection } from "@/components/site/PlatformSection";
 
@@ -32,6 +33,7 @@ export default function HomePage() {
         <Hero />
         <FormatGrid />
         <PackySection />
+        <WorkbenchSection />
         <PackyDrawer />
         <ManufacturingSection />
         <PlatformSection />

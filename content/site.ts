@@ -47,10 +47,78 @@ export const brand = {
 export const nav = [
   { label: "解决方案", href: "#solutions" },
   { label: "产品品类", href: "#categories" },
+  { label: "Packy 工作台", href: "#workbench" },
   { label: "材料与工艺", href: "#manufacturing" },
   { label: "为什么选我们", href: "#platform" },
   { label: "关于 PACKGO", href: "#about" },
 ] as const;
+
+/**
+ * Packy 工作台（**示意版**）。
+ *
+ * 这是给客户/外人看的"工作台长什么样"：订单进度、图稿版本、确认节点、历史复购。
+ * 全部为**示例数据**，不来自任何真实客户；页面会明确标注「示意」。
+ * 真实数据版在 Owner 本机窗口（127.0.0.1:8791），不在此公网页面。
+ */
+export const workbench = {
+  eyebrow: "Packy 工作台",
+  title: "订单、图稿、进度，都在一个地方",
+  summary:
+    "客户登录自己的工作台后：做到哪一步、图稿是第几版、谁确认过、什么时候能交货，一眼看清——不用在聊天记录里翻找。",
+  demoNote: "以下为示意（示例数据），用于说明工作台会呈现什么。",
+  stats: [
+    { k: "进行中订单", v: "2" },
+    { k: "待你确认", v: "1" },
+    { k: "图稿版本", v: "v3" },
+    { k: "平均打样周期", v: "5～7 天" },
+  ],
+  orders: [
+    {
+      id: "示例 · P-1042",
+      title: "咖啡豆袋 250g · 自立袋（拉链 + 排气阀）",
+      stage: "打样中",
+      progress: 60,
+      next: "样品预计 9/26 寄出",
+      milestones: ["需求确认", "报价确认", "打样", "量产", "交付"],
+      current: 2,
+    },
+    {
+      id: "示例 · P-1038",
+      title: "节日礼盒外箱 · 烫金压纹",
+      stage: "待你确认报价",
+      progress: 30,
+      next: "等你确认后即可安排打样",
+      milestones: ["需求确认", "报价确认", "打样", "量产", "交付"],
+      current: 1,
+    },
+    {
+      id: "示例 · P-1015",
+      title: "不干胶标签 · 卷装",
+      stage: "已完成（可复购）",
+      progress: 100,
+      next: "历史规格已保存，下次可一键复购",
+      milestones: ["需求确认", "报价确认", "打样", "量产", "交付"],
+      current: 4,
+    },
+  ],
+  artworks: [
+    { name: "主视觉图稿 v3", kind: "图稿", image: assetPath("/products/pouch.jpg") },
+    { name: "刀版 / 结构图", kind: "刀版", image: assetPath("/products/carton.jpg") },
+    { name: "样品实拍", kind: "样品", image: assetPath("/products/bags.jpg") },
+    { name: "标签版式", kind: "标签", image: assetPath("/products/labels.jpg") },
+  ],
+  timeline: [
+    { at: "09-18", text: "需求确认：容量 250g、拉链 + 排气阀、阻隔要求已确认" },
+    { at: "09-19", text: "报价确认：初步报价 → 工厂确认成本 → 精准报价已确认" },
+    { at: "09-22", text: "打样：刀版与图稿 v3 已进入打样，样品预计 9/26 寄出" },
+    { at: "待进行", text: "量产与交付：样品确认后排产，交付时间以排期确认为准" },
+  ],
+  benefits: [
+    "不用在聊天记录里翻找：进度、图稿、确认记录集中在一处",
+    "图稿有版本：每次修改留版本，避免拿错文件",
+    "复购更快：做过的规格与方案可复用，第二次下单不用从头讲",
+  ],
+} as const;
 
 /** 首页第一屏之后的四大产品形态（对应 Cubit 首页四个主形态卡片的位置）。 */
 export const formats = [

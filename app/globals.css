@@ -1077,3 +1077,228 @@ a {
     animation: none;
   }
 }
+
+/* ==========================================================================
+   Packy 工作台（示意版）
+   ========================================================================== */
+.workbench-note {
+  display: inline-block;
+  margin: 0 0 18px;
+  padding: 6px 12px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.workbench-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.workbench-stat {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+}
+
+.workbench-stat__value {
+  display: block;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--accent-deep);
+}
+
+.workbench-stat__label {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.workbench-orders {
+  margin-bottom: 22px;
+}
+
+.workbench-order {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 18px;
+}
+
+.workbench-order__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.workbench-order__id {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.workbench-order__stage {
+  margin-left: auto;
+  font-size: 12.5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+}
+
+.workbench-order__title {
+  font-size: 16px;
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.workbench-order__bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bg-alt);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.workbench-order__bar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+
+.workbench-order__next {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  margin: 0 0 12px;
+}
+
+.workbench-order__steps {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+}
+
+.workbench-order__steps li {
+  font-size: 12px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.workbench-order__steps li.is-done {
+  background: var(--bg-alt);
+  color: var(--ink-soft);
+}
+
+.workbench-order__steps li.is-current {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.workbench-lower {
+  margin-bottom: 22px;
+}
+
+.workbench-block__title {
+  font-size: 15px;
+  margin: 0 0 12px;
+}
+
+.workbench-artwork-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.workbench-artwork {
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.workbench-artwork__img {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--bg-alt);
+}
+
+.workbench-artwork__img img {
+  object-fit: cover;
+}
+
+.workbench-artwork figcaption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  font-size: 13px;
+}
+
+.workbench-artwork__kind {
+  font-size: 11.5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+}
+
+.workbench-timeline__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.workbench-timeline__list li {
+  display: flex;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 14px;
+}
+
+.workbench-timeline__list li:last-child {
+  border-bottom: 0;
+}
+
+.workbench-timeline__at {
+  flex: 0 0 62px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.workbench-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  display: grid;
+  gap: 8px;
+}
+
+.workbench-benefits li {
+  position: relative;
+  padding-left: 20px;
+  color: var(--ink-soft);
+}
+
+.workbench-benefits li::before {
+  content: "•";
+  position: absolute;
+  left: 6px;
+  color: var(--accent);
+}
+
+@media (max-width: 900px) {
+  .workbench-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
